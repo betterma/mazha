@@ -5,12 +5,10 @@ const storage = (function() {
       const token = auth.getToken();
       if (!token) throw new Error('未认证');
       
-      const repoInfo = auth.getRepoInfo();
-      if (!repoInfo.username || !repoInfo.repo) {
-        throw new Error('仓库信息未配置');
-      }
+      const GITHUB_USERNAME = 'betterma';
+      const GITHUB_REPO = 'mazha';
       
-      const url = `https://api.github.com/repos/${repoInfo.username}/${repoInfo.repo}/${endpoint}`;
+      const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/${endpoint}`;
       
       try {
         const response = await fetch(url, {
@@ -37,21 +35,6 @@ const storage = (function() {
     
     // 公共接口
     return {
-      // 初始化仓库
-      initRepository: async function(username, repo) {
-        auth.setRepoInfo(username, repo);
-        
-        try {
-          // 验证仓库存在性
-          await request('contents');
-          return true;
-        } catch {
-          // 尝试创建目录
-          await this.saveEntry(dayjs().format('YYYY-MM-DD'), '# 欢迎使用日记应用');
-          return true;
-        }
-      },
-      
       // 保存日记条目
       saveEntry: async function(date, content) {
         const filePath = `diary-entries/${date}.md`;

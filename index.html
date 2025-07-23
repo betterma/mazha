@@ -26,7 +26,6 @@
             </svg>
           </button>
           <div class="dropdown-menu" id="userMenu">
-            <button id="settings">仓库设置</button>
             <button id="refresh">刷新数据</button>
             <button id="logout">退出登录</button>
           </div>
@@ -72,24 +71,7 @@
     </div>
     
     <!-- 仓库设置模态框 -->
-    <div class="modal" id="settingsModal">
-      <div class="modal-content">
-        <h3>仓库设置</h3>
-        <p>配置您的GitHub仓库，日记将存储在仓库中的 <code>/diary-entries</code> 目录下</p>
-        <div class="form-group">
-          <label>GitHub用户名</label>
-          <input type="text" id="githubUsername" placeholder="您的GitHub用户名" required>
-        </div>
-        <div class="form-group">
-          <label>仓库名称</label>
-          <input type="text" id="repoName" placeholder="仓库名称" required>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" id="closeSettings">取消</button>
-          <button type="button" class="btn btn-primary" id="saveSettings">保存</button>
-        </div>
-      </div>
-    </div>
+    <!-- 已移除 -->
   </main>
   
   <script src="lib/dayjs.min.js"></script>
@@ -97,5 +79,11 @@
   <script src="assets/js/storage.js"></script>
   <script src="assets/js/utils.js"></script>
   <script src="assets/js/index.js"></script>
+  <script>
+    // 检查是否已通过密码验证
+    if (!sessionStorage.getItem('isAuthed')) {
+      window.location.href = 'login.html';
+    }
+  </script>
 </body>
 </html>

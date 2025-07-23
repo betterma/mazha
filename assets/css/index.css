@@ -1,0 +1,66 @@
+.calendar-card, .entries-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+  .calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-top: 8px;
+  }
+  .calendar-day {
+    background: #f0f6fa;
+    border-radius: 4px;
+    text-align: center;
+    padding: 8px 0;
+    cursor: pointer;
+  }
+  .calendar-day.has-entry {
+    background: #d2eafd;
+    font-weight: bold;
+  }
+  .entries-list .entry-item {
+    background: #f6f8fa;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+@media (max-width: 900px) {
+  .row {
+    flex-direction: column;
+    display: flex;
+  }
+  .col-md-5, .col-md-7 {
+    width: 100%;
+    max-width: 100%;
+    flex: none;
+  }
+  .calendar-card, .entries-card {
+    margin-bottom: 16px;
+  }
+}
+@media (max-width: 600px) {
+  .calendar-header h2 {
+    font-size: 1em;
+  }
+  .calendar-grid {
+    font-size: 13px;
+    gap: 2px;
+  }
+  .calendar-day {
+    padding: 6px 0;
+  }
+  .entries-list .entry-item {
+    font-size: 14px;
+    padding: 6px 8px;
+  }
+}
