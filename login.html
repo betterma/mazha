@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub 登录 - 个人日记应用</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .login-container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    
+    .login-container h1 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+    
+    .login-container p {
+      color: #666;
+      margin-bottom: 30px;
+    }
+    
+    .warning {
+      padding: 15px;
+      background-color: #fff3cd;
+      border-left: 4px solid #ffc107;
+      margin-bottom: 20px;
+      text-align: left;
+      border-radius: 4px;
+    }
+    
+    textarea#token {
+      width: 100%;
+      height: 120px;
+      padding: 15px;
+      border: 2px solid #e1e4e8;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 16px;
+      margin-bottom: 20px;
+      resize: vertical;
+      transition: border-color 0.3s;
+    }
+    
+    textarea#token:focus {
+      border-color: #0366d6;
+      outline: none;
+    }
+    
+    button#submit {
+      background: #2ea44f;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 25px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    
+    button#submit:hover {
+      background: #22863a;
+    }
+    
+    .instructions {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #eaeaea;
+      text-align: left;
+    }
+    
+    .instructions h3 {
+      margin-bottom: 15px;
+      color: #333;
+    }
+    
+    .instructions ol {
+      counter-reset: step-counter;
+      padding-left: 20px;
+    }
+    
+    .instructions li {
+      position: relative;
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+    
+    .instructions li:before {
+      counter-increment: step-counter;
+      content: counter(step-counter);
+      position: absolute;
+      left: -30px;
+      top: 0;
+      background: #f6f8fa;
+      border: 1px solid #e1e4e8;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #6a737d;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>个人日记应用</h1>
+    <p>使用GitHub存储您的日记内容</p>
+    
+    <div class="warning">
+      <strong>安全提示：</strong>此令牌将授予对您指定仓库的完全访问权限。请仅用于个人使用，并且不要在公开设备上保存此令牌。
+    </div>
+    
+    <form id="tokenForm">
+      <textarea 
+        id="token" 
+        placeholder="粘贴您的GitHub个人访问令牌" 
+        required
+      ></textarea>
+      <br>
+      <button type="button" id="submit">确认并继续</button>
+    </form>
+    
+    <div class="instructions">
+      <h3>如何获取GitHub个人访问令牌:</h3>
+      <ol>
+        <li>访问 <a href="https://github.com/settings/tokens" target="_blank">GitHub Token设置</a></li>
+        <li>点击 "Generate new token"</li>
+        <li>设置一个有意义的描述（例如："日记应用访问令牌"）</li>
+        <li>选择令牌的有效期（推荐设置为永不过期）</li>
+        <li>选择权限范围：
+          <ul>
+            <li><strong>repo</strong>（完全访问私有仓库）<em>或者</em></li>
+            <li><strong>public_repo</strong>（如果使用公开仓库）</li>
+          </ul>
+        </li>
+        <li>点击"Generate token"并复制生成的令牌</li>
+        <li>返回此页面，粘贴令牌并点击"确认并继续"</li>
+      </ol>
+    </div>
+    
+    <footer>
+      您的日记将安全存储在您的GitHub仓库中
+    </footer>
+  </div>
+
+  <script src="lib/dayjs.min.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>
+    // 检查是否已有令牌
+    if (auth.isAuthenticated()) {
+      window.location.href = 'index.html';
+    }
+    
+    document.getElementById('submit').addEventListener('click', function() {
+      const token = document.getElementById('token').value.trim();
+      if (!token) {
+        alert('请输入有效的访问令牌');
+        return;
+      }
+      
+      // 保存令牌
+      auth.saveToken(token);
+      
+      // 重定向到主页
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>

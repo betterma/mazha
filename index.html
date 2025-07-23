@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人日记 - 我的数字日记本</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/index.css">
+</head>
+<body>
+  <!-- 头部导航 -->
+  <header class="app-header">
+    <div class="container">
+      <h1 class="logo">我的日记</h1>
+      <div class="actions">
+        <button id="newEntry" class="btn btn-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+          </svg>
+          写日记
+        </button>
+        <div class="dropdown">
+          <button class="btn btn-icon" id="userDropdown">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+            </svg>
+          </button>
+          <div class="dropdown-menu" id="userMenu">
+            <button id="settings">仓库设置</button>
+            <button id="refresh">刷新数据</button>
+            <button id="logout">退出登录</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <!-- 主内容区域 -->
+  <main class="container">
+    <div class="row">
+      <!-- 日历视图 -->
+      <div class="col-md-5">
+        <div class="calendar-card">
+          <div class="calendar-header">
+            <button id="prevMonth">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+              </svg>
+            </button>
+            <h2 id="currentMonth">2023年12月</h2>
+            <button id="nextMonth">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="calendar-grid" id="calendarGrid">
+            <!-- 日历日网格将通过JS填充 -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- 日记列表 -->
+      <div class="col-md-7">
+        <div class="entries-card">
+          <h2 class="card-title">最近日记</h2>
+          <div class="entries-list" id="entriesContainer">
+            <!-- 日记列表将通过JS填充 -->
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 仓库设置模态框 -->
+    <div class="modal" id="settingsModal">
+      <div class="modal-content">
+        <h3>仓库设置</h3>
+        <p>配置您的GitHub仓库，日记将存储在仓库中的 <code>/diary-entries</code> 目录下</p>
+        <div class="form-group">
+          <label>GitHub用户名</label>
+          <input type="text" id="githubUsername" placeholder="您的GitHub用户名" required>
+        </div>
+        <div class="form-group">
+          <label>仓库名称</label>
+          <input type="text" id="repoName" placeholder="仓库名称" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="closeSettings">取消</button>
+          <button type="button" class="btn btn-primary" id="saveSettings">保存</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <script src="lib/dayjs.min.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/index.js"></script>
+</body>
+</html>
