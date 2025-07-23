@@ -92,6 +92,19 @@ const storage = (function() {
         } catch (error) {
           return [];
         }
+      },
+
+      deleteEntry: async function(date) {
+        const filePath = `diary-entries/${date}.md`;
+        // 先获取 sha
+        const { sha } = await request(`contents/${filePath}`);
+        return request(`contents/${filePath}`, {
+          method: 'DELETE',
+          body: JSON.stringify({
+            message: `${date} 日记已删除`,
+            sha
+          })
+        });
       }
     };
   })();

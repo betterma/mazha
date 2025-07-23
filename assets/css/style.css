@@ -1,13 +1,14 @@
 body {
   font-family: 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-  background: #f7f7f7;
+  background: linear-gradient(135deg, #f7faff 0%, #eaf1fb 100%);
+  min-height: 100vh;
   margin: 0;
   padding: 0;
 }
 .container {
-  max-width: 900px;
+  max-width: 980px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 32px 18px 24px 18px;
 }
 .btn {
   padding: 8px 18px;
@@ -17,6 +18,7 @@ body {
   color: #fff;
   cursor: pointer;
   font-size: 16px;
+  transition: background 0.18s, box-shadow 0.18s, color 0.18s;
 }
 .btn-primary {
   background: #0969da;
@@ -25,6 +27,39 @@ body {
   background: none;
   border: none;
   cursor: pointer;
+}
+.btn:hover, .btn-primary:hover {
+  background: #1756b3;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(9,105,218,0.10);
+}
+.btn:active {
+  background: #0d3c7b;
+}
+.app-header, .calendar-card, .entries-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(9,105,218,0.06);
+  margin-bottom: 28px;
+}
+.app-header {
+  padding: 18px 0 12px 0;
+  box-shadow: 0 2px 8px rgba(9,105,218,0.04);
+  border-radius: 0 0 16px 16px;
+}
+.card-title {
+  font-size: 1.3em;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 18px;
+  letter-spacing: 0.5px;
+}
+h1.logo {
+  font-size: 2em;
+  font-weight: 700;
+  color: #0969da;
+  letter-spacing: 1px;
+  margin: 0;
 }
 @media (max-width: 600px) {
   .container {

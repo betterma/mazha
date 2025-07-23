@@ -100,8 +100,21 @@ document.addEventListener('DOMContentLoaded', async function() {
           }
           
           // 点击处理
-          dayCell.addEventListener('click', () => {
-            window.location.href = `editor.html?date=${dayDate}`;
+          dayCell.addEventListener('click', async () => {
+            const entry = entries.find(entry => entry.date === dayDate);
+            if (entry) {
+              try {
+                showLoading('加载日记...');
+                const text = await fetch(entry.url).then(r => r.text());
+                alert(`${utils.formatDate(entry.date, 'YYYY年MM月DD日')}\n\n${text.substring(0, 500)}${text.length > 500 ? '\n...（内容已截断）' : ''}`);
+              } catch (err) {
+                alert('加载日记失败：' + (err.message || err));
+              } finally {
+                hideLoading();
+              }
+            } else {
+              alert('这一天没有日记');
+            }
           });
         }
         
@@ -127,8 +140,15 @@ document.addEventListener('DOMContentLoaded', async function() {
           const entryEl = document.createElement('div');
           entryEl.className = 'entry-item';
           entryEl.innerHTML = `
-            <div class="entry-date">${utils.formatDate(entry.date, 'YYYY年MM月DD日')}</div>
-            <div class="entry-snippet">加载中...</div>
+            <div class="entry-main">
+              <div class="entry-date">${utils.formatDate(entry.date, 'YYYY年MM月DD日')}</div>
+              <div class="entry-snippet">加载中...</div>
+            </div>
+            <div class="entry-actions">
+              <button class="entry-delete-btn" title="删除日记" data-date="${entry.date}">
+                &#128465;
+              </button>
+            </div>
           `;
           
           // 加载日记预览
@@ -145,6 +165,23 @@ document.addEventListener('DOMContentLoaded', async function() {
             window.location.href = `editor.html?date=${entry.date}`;
           });
           
+          // 删除按钮事件绑定
+          entryEl.querySelector('.entry-delete-btn').addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const date = e.currentTarget.getAttribute('data-date');
+            if (confirm('确定要删除这篇日记吗？删除后无法恢复！')) {
+              try {
+                showLoading('正在删除...');
+                await storage.deleteEntry(date);
+                await loadEntries();
+              } catch (err) {
+                alert('删除失败：' + (err.message || err));
+              } finally {
+                hideLoading();
+              }
+            }
+          });
+
           entriesContainer.appendChild(entryEl);
         });
       } catch (error) {
