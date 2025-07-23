@@ -123,7 +123,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         
         entriesContainer.innerHTML = '';
         
-        entries.forEach(entry => {
+        // 只展示最新的3条
+        const showEntries = entries.slice(0, 3);
+        
+        showEntries.forEach(entry => {
           const entryEl = document.createElement('div');
           entryEl.className = 'entry-item';
           entryEl.innerHTML = `
@@ -177,6 +180,17 @@ document.addEventListener('DOMContentLoaded', async function() {
 
           entriesContainer.appendChild(entryEl);
         });
+        
+        // 添加“更多回忆”按钮
+        if (entries.length > 3) {
+          const moreBtn = document.createElement('button');
+          moreBtn.className = 'btn btn-link entries-more-btn';
+          moreBtn.textContent = '更多回忆';
+          moreBtn.onclick = () => {
+            window.location.href = 'all.html';
+          };
+          entriesContainer.appendChild(moreBtn);
+        }
       } catch (error) {
         entriesContainer.innerHTML = `<div class="error">加载失败: ${error.message}</div>`;
         console.error('加载记忆错误:', error);

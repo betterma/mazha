@@ -14,8 +14,8 @@ body {
   padding: 8px 18px;
   border: none;
   border-radius: 4px;
-  background: #238636;
-  color: #fff;
+  background: #fdfdfd;
+  color: #000000;
   cursor: pointer;
   font-size: 16px;
   transition: background 0.18s, box-shadow 0.18s, color 0.18s;
