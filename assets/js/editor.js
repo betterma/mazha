@@ -42,39 +42,19 @@ document.addEventListener('DOMContentLoaded', async function() {
       input.onchange = async () => {
         const file = input.files[0];
         if (!file) return;
-        const compressed = await compressImage(file, 800, 0.7); // 最大宽度800px，质量70%
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const base64 = e.target.result;
-          const range = quill.getSelection();
-          quill.insertEmbed(range.index, 'image', base64);
-        };
-        reader.readAsDataURL(compressed);
+        // 使用 browser-image-compression 压缩
+        const compressed = await imageCompression(file, {
+          maxWidthOrHeight: 800,
+          maxSizeMB: 0.1, // 100KB
+          useWebWorker: true
+        });
+        const base64 = await imageCompression.getDataUrlFromFile(compressed);
+        const range = quill.getSelection();
+        quill.insertEmbed(range.index, 'image', base64);
       };
     });
     
-    async function compressImage(file, maxWidth, quality) {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = function() {
-          let w = img.width, h = img.height;
-          if (w > maxWidth) {
-            h = h * (maxWidth / w);
-            w = maxWidth;
-          }
-          const canvas = document.createElement('canvas');
-          canvas.width = w;
-          canvas.height = h;
-          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-          canvas.toBlob((blob) => {
-            resolve(new File([blob], file.name, {type: blob.type}));
-          }, file.type, quality);
-        };
-        img.src = URL.createObjectURL(file);
-      });
-    }
-    
-    // 加载现有日记
+    // 加载现有记忆
     const existingEntry = await storage.getEntry(entryDate);
     if (existingEntry) {
       quill.setText('');
@@ -93,7 +73,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       showLoading('保存中...');
       try {
         await storage.saveEntry(entryDate, content);
-        alert('日记保存成功！');
+        alert('记忆保存成功！');
         window.history.back();
       } catch (error) {
         alert(`保存失败: ${error.message}`);
@@ -101,6 +81,25 @@ document.addEventListener('DOMContentLoaded', async function() {
         hideLoading();
       }
     });
+    
+    // 删除记忆功能
+    const deleteBtn = document.getElementById('deleteEntryBtn');
+    if (deleteBtn) {
+      deleteBtn.addEventListener('click', async function() {
+        if (confirm('确定要删除这篇记忆吗？删除后无法恢复！')) {
+          try {
+            showLoading && showLoading('正在删除...');
+            await storage.deleteEntry(entryDate);
+            alert('删除成功！');
+            window.location.href = 'index.html';
+          } catch (err) {
+            alert('删除失败：' + (err.message || err));
+          } finally {
+            hideLoading && hideLoading();
+          }
+        }
+      });
+    }
     
     // 自动保存功能
     let saveTimer = null;

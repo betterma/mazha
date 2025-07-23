@@ -94,27 +94,14 @@ document.addEventListener('DOMContentLoaded', async function() {
           // 构造当前月份的完整日期
           const dayDate = dayjs(`${date.year()}-${date.month() + 1}-${day}`).format('YYYY-MM-DD');
           
-          // 检查是否有日记条目
+          // 检查是否有记忆条目
           if (entries.some(entry => entry.date === dayDate)) {
             dayCell.classList.add('has-entry');
           }
           
           // 点击处理
-          dayCell.addEventListener('click', async () => {
-            const entry = entries.find(entry => entry.date === dayDate);
-            if (entry) {
-              try {
-                showLoading('加载日记...');
-                const text = await fetch(entry.url).then(r => r.text());
-                alert(`${utils.formatDate(entry.date, 'YYYY年MM月DD日')}\n\n${text.substring(0, 500)}${text.length > 500 ? '\n...（内容已截断）' : ''}`);
-              } catch (err) {
-                alert('加载日记失败：' + (err.message || err));
-              } finally {
-                hideLoading();
-              }
-            } else {
-              alert('这一天没有日记');
-            }
+          dayCell.addEventListener('click', () => {
+            window.location.href = `editor.html?date=${dayDate}`;
           });
         }
         
@@ -122,15 +109,15 @@ document.addEventListener('DOMContentLoaded', async function() {
       });
     }
     
-    // 加载日记条目
+    // 加载记忆条目
     async function loadEntries() {
       try {
-        showLoading('加载日记中...');
-        entriesContainer.innerHTML = '<div class="loading">加载日记中...</div>';
+        showLoading('加载记忆中...');
+        entriesContainer.innerHTML = '<div class="loading">加载记忆中...</div>';
         entries = await storage.getEntries();
         
         if (entries.length === 0) {
-          entriesContainer.innerHTML = '<div class="empty">还没有日记，开始写第一篇吧！</div>';
+          entriesContainer.innerHTML = '<div class="empty">还没有记忆，开始写第一篇吧！</div>';
           return;
         }
         
@@ -145,13 +132,13 @@ document.addEventListener('DOMContentLoaded', async function() {
               <div class="entry-snippet">加载中...</div>
             </div>
             <div class="entry-actions">
-              <button class="entry-delete-btn" title="删除日记" data-date="${entry.date}">
+              <button class="entry-delete-btn" title="删除记忆" data-date="${entry.date}">
                 &#128465;
               </button>
             </div>
           `;
           
-          // 加载日记预览
+          // 加载记忆预览
           fetch(entry.url)
             .then(response => response.text())
             .then(text => {
@@ -174,7 +161,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           entryEl.querySelector('.entry-delete-btn').addEventListener('click', async (e) => {
             e.stopPropagation();
             const date = e.currentTarget.getAttribute('data-date');
-            if (confirm('确定要删除这篇日记吗？删除后无法恢复！')) {
+            if (confirm('确定要删除这篇记忆吗？删除后无法恢复！')) {
               try {
                 showLoading('正在删除...');
                 await storage.deleteEntry(date);
@@ -192,9 +179,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
       } catch (error) {
         entriesContainer.innerHTML = `<div class="error">加载失败: ${error.message}</div>`;
-        console.error('加载日记错误:', error);
+        console.error('加载记忆错误:', error);
       } finally {
         hideLoading();
       }
+
+      await renderCalendar(currentDate);
     }
   });

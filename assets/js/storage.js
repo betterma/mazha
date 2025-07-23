@@ -11,7 +11,7 @@ const storage = (function() {
       const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/${endpoint}`;
       
       try {
-        const response = await fetch(url, {
+        const response = await fetch(`${url}?t=${Date.now()}`, {
           ...options,
           headers: {
             'Authorization': `token ${token}`,
@@ -35,10 +35,10 @@ const storage = (function() {
     
     // 公共接口
     return {
-      // 保存日记条目
+      // 保存记忆条目
       saveEntry: async function(date, content) {
         const filePath = `diary-entries/${date}.md`;
-        const message = `${date} ${content ? '日记已更新' : '日记已删除'}`;
+        const message = `${date} ${content ? '记忆已更新' : '记忆已删除'}`;
         
         try {
           // 检查文件是否存在
@@ -64,7 +64,7 @@ const storage = (function() {
         }
       },
       
-      // 获取日记条目
+      // 获取记忆条目
       getEntry: async function(date) {
         const filePath = `diary-entries/${date}.md`;
         
@@ -72,12 +72,12 @@ const storage = (function() {
           const file = await request(`contents/${filePath}`);
           return decodeURIComponent(escape(atob(file.content)));
         } catch (error) {
-          console.log(`没有找到${date}的日记`);
+          console.log(`没有找到${date}的记忆`);
           return null;
         }
       },
       
-      // 获取所有日记日期
+      // 获取所有记忆日期
       getEntries: async function() {
         try {
           const data = await request('contents/diary-entries');
@@ -101,7 +101,7 @@ const storage = (function() {
         return request(`contents/${filePath}`, {
           method: 'DELETE',
           body: JSON.stringify({
-            message: `${date} 日记已删除`,
+            message: `${date} 记忆已删除`,
             sha
           })
         });
