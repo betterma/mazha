@@ -112,6 +112,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // 加载日记条目
     async function loadEntries() {
       try {
+        showLoading('加载日记中...');
         entriesContainer.innerHTML = '<div class="loading">加载日记中...</div>';
         entries = await storage.getEntries();
         
@@ -149,6 +150,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       } catch (error) {
         entriesContainer.innerHTML = `<div class="error">加载失败: ${error.message}</div>`;
         console.error('加载日记错误:', error);
+      } finally {
+        hideLoading();
       }
     }
   });

@@ -54,3 +54,16 @@ window.utils = (function() {
       generateCalendar
     };
   })();
+
+  function showLoading(text = '加载中...') {
+    const mask = document.getElementById('globalLoading');
+    if (mask) {
+      document.getElementById('loadingText').textContent = text;
+      mask.style.display = 'flex';
+    }
+  }
+  
+  function hideLoading() {
+    const mask = document.getElementById('globalLoading');
+    if (mask) mask.style.display = 'none';
+  }

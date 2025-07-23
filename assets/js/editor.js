@@ -49,14 +49,15 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     document.getElementById('saveButton').addEventListener('click', async () => {
       const content = quill.root.innerHTML;
-      
+      showLoading('保存中...');
       try {
         await storage.saveEntry(entryDate, content);
         alert('日记保存成功！');
         window.history.back();
       } catch (error) {
         alert(`保存失败: ${error.message}`);
-        console.error('保存错误:', error);
+      } finally {
+        hideLoading();
       }
     });
     

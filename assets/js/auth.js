@@ -3,7 +3,7 @@ const auth = (function() {
     // 私有方法
     const GITHUB_USER_KEY = 'github_username';
     const GITHUB_TOKEN_KEY = 'github_token';
-    const FIXED_TOKEN = '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'; // TODO: 替换为你的真实token
+    const FIXED_TOKEN = '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'; // TODO: 替换为你的真实token
     const REPO_NAME_KEY = 'github_repo';
   
     return {
