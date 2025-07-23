@@ -155,10 +155,15 @@ document.addEventListener('DOMContentLoaded', async function() {
           fetch(entry.url)
             .then(response => response.text())
             .then(text => {
-              // 提取第一句话作为预览
-              const preview = text.substring(0, 100);
-              entryEl.querySelector('.entry-snippet').textContent = 
-                preview + (text.length > 100 ? '...' : '');
+              // 只截取前100字符，但保留富文本标签
+              let div = document.createElement('div');
+              div.innerHTML = text;
+              let html = div.innerHTML;
+              // 可选：只显示前100字符的HTML（简单裁剪，复杂可用更智能的HTML裁剪库）
+              if (html.length > 300) {
+                html = html.substring(0, 300) + '...';
+              }
+              entryEl.querySelector('.entry-snippet').innerHTML = html;
             });
           
           entryEl.addEventListener('click', () => {
@@ -173,7 +178,8 @@ document.addEventListener('DOMContentLoaded', async function() {
               try {
                 showLoading('正在删除...');
                 await storage.deleteEntry(date);
-                await loadEntries();
+                alert('删除成功！');
+                await loadEntries(); // 删除后刷新列表
               } catch (err) {
                 alert('删除失败：' + (err.message || err));
               } finally {

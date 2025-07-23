@@ -24,20 +24,20 @@
     cursor: pointer;
   }
   .calendar-day.has-entry {
-    background: #d2eafd;
-    font-weight: bold;
+    background: #fffbe6;
+    border-radius: 50%;
     position: relative;
   }
   .calendar-day.has-entry::after {
     content: '';
     display: block;
-    width: 7px;
-    height: 7px;
+    width: 6px;
+    height: 6px;
+    background: #faad14;
     border-radius: 50%;
-    background: #0969da;
     position: absolute;
     left: 50%;
-    bottom: 6px;
+    bottom: 4px;
     transform: translateX(-50%);
   }
   .entries-list {

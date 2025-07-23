@@ -33,6 +33,47 @@ document.addEventListener('DOMContentLoaded', async function() {
       theme: 'snow'
     });
     
+    // 图片压缩插入
+    quill.getModule('toolbar').addHandler('image', function() {
+      const input = document.createElement('input');
+      input.setAttribute('type', 'file');
+      input.setAttribute('accept', 'image/*');
+      input.click();
+      input.onchange = async () => {
+        const file = input.files[0];
+        if (!file) return;
+        const compressed = await compressImage(file, 800, 0.7); // 最大宽度800px，质量70%
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const base64 = e.target.result;
+          const range = quill.getSelection();
+          quill.insertEmbed(range.index, 'image', base64);
+        };
+        reader.readAsDataURL(compressed);
+      };
+    });
+    
+    async function compressImage(file, maxWidth, quality) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = function() {
+          let w = img.width, h = img.height;
+          if (w > maxWidth) {
+            h = h * (maxWidth / w);
+            w = maxWidth;
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          canvas.toBlob((blob) => {
+            resolve(new File([blob], file.name, {type: blob.type}));
+          }, file.type, quality);
+        };
+        img.src = URL.createObjectURL(file);
+      });
+    }
+    
     // 加载现有日记
     const existingEntry = await storage.getEntry(entryDate);
     if (existingEntry) {
