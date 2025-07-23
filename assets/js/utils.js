@@ -1,5 +1,5 @@
 // utils.js - 工具函数库
-const utils = (function() {
+window.utils = (function() {
     // 格式化日期
     function formatDate(dateString, format = 'YYYY-MM-DD') {
       return dayjs(dateString).format(format);
