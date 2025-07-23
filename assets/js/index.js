@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // 初始化UI
     renderCalendar(currentDate);
-    await loadEntries();
+    await loadEntries(); // 每次进入首页都刷新
     
     // 事件监听器
     prevMonthBtn.addEventListener('click', () => {

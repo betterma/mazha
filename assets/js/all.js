@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         entryEl.querySelector('.entry-snippet').innerHTML = html;
       });
     entryEl.addEventListener('click', () => {
-      window.location.href = `view.html?date=${entry.date}`;
+      window.location.href = `editor.html?date=${entry.date}`;
     });
     container.appendChild(entryEl);
   });
