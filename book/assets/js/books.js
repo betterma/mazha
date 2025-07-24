@@ -1,10 +1,12 @@
 document.addEventListener('DOMContentLoaded', async function() {
+  showLoading('正在加载...');
   const list = document.getElementById('bookList');
   let indexFile = await storage.getFile('books/index.json');
   let books = [];
   try { books = JSON.parse(indexFile.content || '[]'); } catch {}
   if (!books.length) {
     list.innerHTML = '<li style="color:#888;">暂无图书</li>';
+    hideLoading();
     return;
   }
   books.forEach(book => {
@@ -21,4 +23,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     `;
     list.appendChild(li);
   });
+  hideLoading();
 });
+
+function showLoading(msg) {
+  document.getElementById('loadingText').textContent = msg || '正在加载...';
+  document.getElementById('globalLoading').style.display = 'flex';
+}
+function hideLoading() {
+  document.getElementById('globalLoading').style.display = 'none';
+}
