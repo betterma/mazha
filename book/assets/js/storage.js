@@ -145,3 +145,20 @@ const storage = (function() {
       }
     };
   })();
+
+const { content, url } = await storage.getFile(bookPath);
+
+if (content) {
+  // 旧逻辑：小文件，base64内容
+  // 这里是原有的 base64 解析方式
+  // ...
+} else if (url) {
+  // 新逻辑：大文件，直接用 download_url
+  // 以 epub.js 为例
+  const book = ePub(url);
+  book.renderTo("viewer");
+  // 或其它适合你项目的加载方式
+} else {
+  // 文件不存在
+  document.getElementById('reader').textContent = '文件不存在';
+}
