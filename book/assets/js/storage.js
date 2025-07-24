@@ -42,9 +42,9 @@ const storage = (function() {
         
         try {
           // 检查文件是否存在
-          const { sha } = await request(`contents/${filePath}`);
+          const { sha } = await request(`book/${filePath}`);
           // 更新现有文件
-          return request(`contents/${filePath}`, {
+          return request(`book/${filePath}`, {
             method: 'PUT',
             body: JSON.stringify({
               message,
@@ -54,7 +54,7 @@ const storage = (function() {
           });
         } catch {
           // 创建新文件
-          return request(`contents/${filePath}`, {
+          return request(`book/${filePath}`, {
             method: 'PUT',
             body: JSON.stringify({
               message,
@@ -69,7 +69,7 @@ const storage = (function() {
         const filePath = `diary-entries/${date}.md`;
         
         try {
-          const file = await request(`contents/${filePath}`);
+          const file = await request(`book/${filePath}`);
           return decodeURIComponent(escape(atob(file.content)));
         } catch (error) {
           console.log(`没有找到${date}的记忆`);
@@ -80,7 +80,7 @@ const storage = (function() {
       // 获取所有记忆日期
       getEntries: async function() {
         try {
-          const data = await request('contents/diary-entries');
+          const data = await request('book/diary-entries');
           return data
             .filter(item => item.type === 'file' && item.name.endsWith('.md'))
             .map(item => ({
@@ -97,8 +97,8 @@ const storage = (function() {
       deleteEntry: async function(date) {
         const filePath = `diary-entries/${date}.md`;
         // 先获取 sha
-        const { sha } = await request(`contents/${filePath}`);
-        return request(`contents/${filePath}`, {
+        const { sha } = await request(`book/${filePath}`);
+        return request(`book/${filePath}`, {
           method: 'DELETE',
           body: JSON.stringify({
             message: `${date} 记忆已删除`,
@@ -110,7 +110,7 @@ const storage = (function() {
       // 新增：获取任意文件内容（如导航JSON）
       getFile: async function(filename) {
         try {
-          const file = await request(`contents/${filename}`);
+          const file = await request(`book/${filename}`);
           // base64解码
           const content = decodeURIComponent(escape(atob(file.content)));
           return { content, sha: file.sha };
@@ -124,12 +124,12 @@ const storage = (function() {
       saveFile: async function(filename, content) {
         let sha = null;
         try {
-          const file = await request(`contents/${filename}`);
+          const file = await request(`book/${filename}`);
           sha = file.sha;
         } catch (e) {
           // 文件不存在时sha为null
         }
-        return request(`contents/${filename}`, {
+        return request(`book/${filename}`, {
           method: 'PUT',
           body: JSON.stringify({
             message: `${filename} 已更新`,
