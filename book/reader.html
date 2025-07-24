@@ -6,12 +6,29 @@
   <title>阅读电子书</title>
   <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    .reader-container { background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:24px; margin:32px auto; max-width:700px; min-height:60vh;}
+    .reader-container { background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:24px; margin:32px auto; max-width:700px; min-height:60vh; }
     #reader { min-height:400px; }
     pre { white-space:pre-wrap; word-break:break-all; }
     @media (max-width:600px) {
-      .reader-container { padding:8px; margin:8px 0; }
-      #reader { min-height:200px; }
+      html, body { height:100%; margin:0; padding:0; }
+      body { min-height:100vh; background:#fff; }
+      .container { min-height:100vh; display:flex; flex-direction:column; }
+      .reader-container {
+        flex:1;
+        min-height:100vh;
+        max-width:none;
+        border-radius:0;
+        box-shadow:none;
+        padding:8px 0 8px 0;
+        margin:0;
+        display:flex;
+        flex-direction:column;
+      }
+      #reader {
+        min-height:calc(100vh - 110px);
+        flex:1;
+        overflow:auto;
+      }
     }
   </style>
 </head>
