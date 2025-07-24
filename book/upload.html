@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>上传电子书</title>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css" id="main-css">
   <style>
     .upload-card { background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:24px; margin:32px auto; max-width:500px;}
     .upload-list { margin-top:18px; }
@@ -32,8 +32,18 @@
       <span id="loadingText" style="margin-left:12px;">正在上传...</span>
     </div>
   </div>
-  <script src="assets/js/auth.js"></script>
-  <script src="assets/js/storage.js"></script>
-  <script src="assets/js/upload.js"></script>
+  <script src="assets/js/auth.js" id="auth-js"></script>
+  <script src="assets/js/storage.js" id="storage-js"></script>
+  <script src="assets/js/upload.js" id="upload-js"></script>
+  <script>
+    // 动态为静态资源加时间戳，防止缓存
+    (function(){
+      var ts = Date.now();
+      document.getElementById('main-css').href += '?v=' + ts;
+      document.getElementById('auth-js').src += '?v=' + ts;
+      document.getElementById('storage-js').src += '?v=' + ts;
+      document.getElementById('upload-js').src += '?v=' + ts;
+    })();
+  </script>
 </body>
 </html>
