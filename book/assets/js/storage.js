@@ -111,8 +111,14 @@ const storage = (function() {
       // 新增：获取任意文件内容（如导航JSON）
       getFile: async function(filename) {
         try {
-          // 自动补全路径
+          // 只在没有 book/ 前缀时补全
           let path = filename.startsWith('book/') ? filename : 'book/' + filename;
+          // 但如果 filename 已经是 books/xxx.epub，应该补全为 book/books/xxx.epub
+          if (!filename.startsWith('book/')) {
+            path = 'book/' + filename;
+          } else {
+            path = filename;
+          }
           const file = await request(path);
           const content = decodeURIComponent(escape(atob(file.content)));
           return { content, sha: file.sha };
