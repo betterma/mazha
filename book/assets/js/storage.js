@@ -8,7 +8,8 @@ const storage = (function() {
       const GITHUB_USERNAME = 'betterma';
       const GITHUB_REPO = 'mazha';
       
-      const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/${endpoint}`;
+      // 修改为 contents API 路径
+      const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${endpoint}`;
       
       try {
         const response = await fetch(`${url}?t=${Date.now()}`, {
@@ -110,7 +111,8 @@ const storage = (function() {
       // 新增：获取任意文件内容（如导航JSON）
       getFile: async function(filename) {
         try {
-          const file = await request(`book/${filename}`);
+          // 这里 filename 应为 book/books/xxx.epub
+          const file = await request(filename);
           // base64解码
           const content = decodeURIComponent(escape(atob(file.content)));
           return { content, sha: file.sha };
