@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>上传电子书</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .upload-card { background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:24px; margin:32px auto; max-width:500px;}
+    .upload-list { margin-top:18px; }
+    .upload-list li { margin-bottom:8px; color:#3370ff; }
+    @media (max-width:600px) {
+      .upload-card { padding:12px; margin:12px 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="upload-card">
+      <h2 class="card-title">上传电子书</h2>
+      <input type="file" id="bookInput" multiple accept=".txt,.md,.pdf,.epub,.docx" style="margin-bottom:12px;">
+      <button id="uploadBtn" class="btn btn-primary">上传</button>
+      <ul id="uploadList" class="upload-list"></ul>
+      <a href="books.html" class="btn btn-link" style="margin-top:16px;display:inline-block;">查看全部图书</a>
+    </div>
+  </div>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/upload.js"></script>
+</body>
+</html>

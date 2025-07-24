@@ -1,0 +1,24 @@
+document.addEventListener('DOMContentLoaded', async function() {
+  const list = document.getElementById('bookList');
+  let indexFile = await storage.getFile('books/index.json');
+  let books = [];
+  try { books = JSON.parse(indexFile.content || '[]'); } catch {}
+  if (!books.length) {
+    list.innerHTML = '<li style="color:#888;">暂无图书</li>';
+    return;
+  }
+  books.forEach(book => {
+    const li = document.createElement('li');
+    li.className = 'book-item';
+    li.innerHTML = `
+      <div class="book-main">
+        <div class="book-title">${book.name}</div>
+        <div class="book-meta">${book.type.toUpperCase()} | ${Math.round(book.size/1024)}KB | 上传于 ${book.uploadTime.slice(0,10)}</div>
+      </div>
+      <div class="book-actions">
+        <a href="reader.html?file=${encodeURIComponent(book.path)}&type=${book.type}" class="btn btn-link">阅读</a>
+      </div>
+    `;
+    list.appendChild(li);
+  });
+});

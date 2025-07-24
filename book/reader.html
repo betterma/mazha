@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>阅读电子书</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.css">
+  <style>
+    .reader-container { background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:24px; margin:32px auto; max-width:700px; min-height:60vh;}
+    #reader { min-height:400px; }
+    pre { white-space:pre-wrap; word-break:break-all; }
+    @media (max-width:600px) {
+      .reader-container { padding:8px; margin:8px 0; }
+      #reader { min-height:200px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="reader-container">
+      <h2 class="card-title" id="bookTitle">阅读</h2>
+      <div id="reader"></div>
+      <a href="books.html" class="btn btn-link" style="margin-top:16px;display:inline-block;">返回目录</a>
+    </div>
+  </div>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/storage.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mammoth/mammoth.browser.min.js"></script>
+  <script src="assets/js/reader.js"></script>
+</body>
+</html>
