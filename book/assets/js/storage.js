@@ -111,15 +111,13 @@ const storage = (function() {
       // 新增：获取任意文件内容（如导航JSON）
       getFile: async function(filename) {
         try {
-          // 只在没有 book/ 前缀时补全
           let path = filename.startsWith('book/') ? filename : 'book/' + filename;
-          // 但如果 filename 已经是 books/xxx.epub，应该补全为 book/books/xxx.epub
-          if (!filename.startsWith('book/')) {
-            path = 'book/' + filename;
-          } else {
-            path = filename;
-          }
           const file = await request(path);
+          // 如果 content 字段为空且有 download_url，直接返回 download_url
+          if (!file.content && file.download_url) {
+            return { content: null, url: file.download_url, sha: file.sha };
+          }
+          // 否则按原逻辑 base64 解码
           const content = decodeURIComponent(escape(atob(file.content)));
           return { content, sha: file.sha };
         } catch (error) {
