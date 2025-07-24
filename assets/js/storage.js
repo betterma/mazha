@@ -105,6 +105,38 @@ const storage = (function() {
             sha
           })
         });
+      },
+
+      // 新增：获取任意文件内容（如导航JSON）
+      getFile: async function(filename) {
+        try {
+          const file = await request(`contents/${filename}`);
+          // base64解码
+          const content = decodeURIComponent(escape(atob(file.content)));
+          return { content, sha: file.sha };
+        } catch (error) {
+          // 文件不存在时返回空内容
+          return { content: '', sha: null };
+        }
+      },
+
+      // 新增：保存任意文件内容（如导航JSON）
+      saveFile: async function(filename, content) {
+        let sha = null;
+        try {
+          const file = await request(`contents/${filename}`);
+          sha = file.sha;
+        } catch (e) {
+          // 文件不存在时sha为null
+        }
+        return request(`contents/${filename}`, {
+          method: 'PUT',
+          body: JSON.stringify({
+            message: `${filename} 已更新`,
+            content: btoa(unescape(encodeURIComponent(content))),
+            ...(sha ? { sha } : {})
+          })
+        });
       }
     };
   })();

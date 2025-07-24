@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>门户导航</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="container header-flex">
+      <h1 class="logo">门户导航</h1>
+    </div>
+  </header>
+  <main class="container">
+    <div class="entries-card">
+      <h2 class="card-title">我的导航</h2>
+      <ul id="navList" class="entries-list"></ul>
+      <form id="addNavForm" style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+        <input type="text" id="navTitle" placeholder="名称" required style="flex:1;min-width:80px;padding:8px;border-radius:6px;border:1px solid #eee;">
+        <input type="url" id="navUrl" placeholder="https://..." required style="flex:2;min-width:120px;padding:8px;border-radius:6px;border:1px solid #eee;">
+        <button type="submit" class="btn btn-primary">添加</button>
+      </form>
+    </div>
+  </main>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/portal.js"></script>
+</body>
+</html>
