@@ -35,13 +35,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('bookTitle').textContent = decodeURIComponent(file.split('/').pop());
 
-    // 获取文件内容
-    const { content } = await storage.getFile(file);
-    if (!content) {
-      document.getElementById('reader').textContent = '文件不存在';
-      hideLoading();
-      return;
-    }
+    const { content, url } = await storage.getFile(file);
+if (!content && !url) {
+  document.getElementById('reader').textContent = '文件不存在';
+  hideLoading();
+  return;
+}
 
     // base64解码为Uint8Array
     function base64ToUint8Array(base64) {
@@ -100,10 +99,15 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       hideLoading();
     } else if (type === 'epub') {
-      const bytes = base64ToUint8Array(content);
-      const blob = new Blob([bytes], { type: 'application/epub+zip' });
-      const url = URL.createObjectURL(blob);
-      const book = ePub(url);
+      let epubUrl;
+      if (url) {
+        epubUrl = url;
+      } else {
+        const bytes = base64ToUint8Array(content);
+        const blob = new Blob([bytes], { type: 'application/epub+zip' });
+        epubUrl = URL.createObjectURL(blob);
+      }
+      const book = ePub(epubUrl);
       const rendition = book.renderTo("reader", { width: "100%", height: 500 });
       // 恢复epub进度
       if(progress.cfi) {
@@ -135,21 +139,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   })();
 });
-
-async function loadBook(bookPath) {
-  const { content, url } = await storage.getFile(bookPath);
-
-  if (content) {
-    // 旧逻辑：小文件，base64内容
-    // ...
-  } else if (url) {
-    // 新逻辑：大文件，直接用 download_url
-    const book = ePub(url);
-    book.renderTo("viewer");
-  } else {
-    document.getElementById('reader').textContent = '文件不存在';
-  }
-}
-
-// 调用
-loadBook(bookPath);
