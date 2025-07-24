@@ -135,3 +135,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   })();
 });
+
+async function loadBook(bookPath) {
+  const { content, url } = await storage.getFile(bookPath);
+
+  if (content) {
+    // 旧逻辑：小文件，base64内容
+    // ...
+  } else if (url) {
+    // 新逻辑：大文件，直接用 download_url
+    const book = ePub(url);
+    book.renderTo("viewer");
+  } else {
+    document.getElementById('reader').textContent = '文件不存在';
+  }
+}
+
+// 调用
+loadBook(bookPath);
