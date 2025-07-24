@@ -12,6 +12,7 @@
     @media (max-width:600px) {
       .upload-card { padding:12px; margin:12px 0; }
     }
+    @keyframes spin { 0%{transform:rotate(0);} 100%{transform:rotate(360deg);} }
   </style>
 </head>
 <body>
@@ -21,7 +22,13 @@
       <input type="file" id="bookInput" multiple accept=".txt,.md,.pdf,.epub,.docx" style="margin-bottom:12px;">
       <button id="uploadBtn" class="btn btn-primary">上传</button>
       <ul id="uploadList" class="upload-list"></ul>
-      <a href="books.html" class="btn btn-link" style="margin-top:16px;display:inline-block;">查看全部图书</a>
+      <a href="index.html" class="btn btn-link" style="margin-top:16px;display:inline-block;">查看全部图书</a>
+    </div>
+  </div>
+  <div id="globalLoading" style="display:none;position:fixed;left:0;top:0;right:0;bottom:0;z-index:999;background:rgba(255,255,255,0.7);align-items:center;justify-content:center;font-size:1.2em;color:#3370ff;">
+    <div>
+      <span class="loading-spinner" style="display:inline-block;width:32px;height:32px;border:4px solid #eee;border-top:4px solid #3370ff;border-radius:50%;animation:spin 1s linear infinite;vertical-align:middle;"></span>
+      <span id="loadingText" style="margin-left:12px;">正在上传...</span>
     </div>
   </div>
   <script src="assets/js/auth.js"></script>
