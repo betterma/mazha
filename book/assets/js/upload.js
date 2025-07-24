@@ -25,7 +25,19 @@ document.getElementById('uploadBtn').onclick = async function() {
     showLoading(`正在上传：${file.name} (${i+1}/${files.length})`);
     try {
       const arrayBuffer = await file.arrayBuffer();
-      const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+      // 针对大文件btoa可能溢出，需分片处理
+      let base64 = '';
+      const uint8 = new Uint8Array(arrayBuffer);
+      const chunkSize = 0x8000;
+      if (uint8.length > 1024 * 1024) { // 超过1MB分片
+        let binary = '';
+        for (let j = 0; j < uint8.length; j += chunkSize) {
+          binary += String.fromCharCode.apply(null, uint8.subarray(j, j + chunkSize));
+        }
+        base64 = btoa(binary);
+      } else {
+        base64 = btoa(String.fromCharCode(...uint8));
+      }
       const ext = file.name.split('.').pop().toLowerCase();
       const bookMeta = {
         name: file.name,
@@ -40,7 +52,7 @@ document.getElementById('uploadBtn').onclick = async function() {
       li.textContent = `上传完成：${file.name}`;
       success++;
     } catch(e) {
-      li.textContent = `上传失败：${file.name}`;
+      li.textContent = `上传失败：${file.name}，原因：${e.message || e}`;
       li.style.color = 'red';
       fail++;
     }
