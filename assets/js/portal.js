@@ -1,6 +1,7 @@
 const NAV_FILE = 'nav-links.json';
 
 async function loadNavLinks() {
+  showLoading();
   try {
     const file = await storage.getFile(NAV_FILE);
     return JSON.parse(file.content || '[]');
@@ -11,11 +12,15 @@ async function loadNavLinks() {
       { title: 'zyx', url: 'https://betterma.github.io/zyx' },
       { title: 'mazha', url: 'https://betterma.github.io/mazha' }
     ];
+  } finally {
+    hideLoading();
   }
 }
 
 async function saveNavLinks(links) {
+  showLoading();
   await storage.saveFile(NAV_FILE, JSON.stringify(links, null, 2));
+  hideLoading();
 }
 
 function renderNav(links) {
@@ -69,3 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 });
+
+function showLoading() {
+  var mask = document.getElementById('loading-mask');
+  if(mask) mask.style.display = 'flex';
+}
+function hideLoading() {
+  var mask = document.getElementById('loading-mask');
+  if(mask) mask.style.display = 'none';
+}
