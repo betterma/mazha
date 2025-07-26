@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>热点追踪 - 全网流行内容聚合平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* 原有样式保持不变 */
+        
+        /* 新增微信公众号相关样式 */
+        .wechat .platform-logo {
+            background-color: #07c160;
+        }
+        
+        .article-card {
+            display: flex;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .dark-theme .article-card {
+            background-color: #2a3444;
+        }
+        
+        .article-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .article-thumb {
+            width: 120px;
+            height: 90px;
+            border-radius: 6px;
+            object-fit: cover;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .article-content {
+            flex-grow: 1;
+        }
+        
+        .article-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .article-meta {
+            display: flex;
+            font-size: 0.85rem;
+            color: #718096;
+        }
+        
+        .dark-theme .article-meta {
+            color: #9ca3af;
+        }
+        
+        .article-author {
+            margin-right: 15px;
+        }
+        
+        .article-stats {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+            font-size: 0.85rem;
+            color: #718096;
+        }
+        
+        .dark-theme .stat-item {
+            color: #9ca3af;
+        }
+        
+        .stat-item i {
+            margin-right: 5px;
+        }
+        
+        .api-config {
+            background-color: #f0f7ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .dark-theme .api-config {
+            background-color: #1c2b41;
+        }
+        
+        .api-title {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #2b6cb0;
+        }
+        
+        .dark-theme .api-title {
+            color: #63b3ed;
+        }
+        
+        .api-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .api-input {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .api-input input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            background-color: white;
+        }
+        
+        .dark-theme .api-input input {
+            background-color: #2d3748;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        .api-button {
+            background-color: #4299e1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .api-button:hover {
+            background-color: #3182ce;
+        }
+        
+        .platform-section.wechat .trend-list {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-fire"></i>
+                    <h1>热点追踪</h1>
+                </div>
+                <div class="search-box">
+                    <input type="text" placeholder="搜索热门内容、话题或关键词...">
+                </div>
+                <div class="header-actions">
+                    <button class="btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+                    <button class="btn"><i class="fas fa-bell"></i></button>
+                    <button class="btn"><i class="fas fa-user"></i></button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 主要内容区 -->
+        <div class="main-content">
+            <!-- 左侧筛选区 -->
+            <aside class="filter-sidebar">
+                <h2 class="filter-title">内容筛选</h2>
+                
+                <div class="filter-section">
+                    <h3>内容类型</h3>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active">全部</button>
+                        <button class="filter-btn">新闻热点</button>
+                        <button class="filter-btn">娱乐</button>
+                        <button class="filter-btn">科技</button>
+                        <button class="filter-btn">购物</button>
+                        <button class="filter-btn">生活</button>
+                        <button class="filter-btn">知识学习</button>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <h3>平台热度</h3>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active">全部平台</button>
+                        <button class="filter-btn">微博热搜</button>
+                        <button class="filter-btn">抖音热榜</button>
+                        <button class="filter-btn">百度指数</button>
+                        <button class="filter-btn">小红书趋势</button>
+                        <!-- 新增微信公众号选项 -->
+                        <button class="filter-btn">微信公众号</button>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <h3>热度时间</h3>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active">实时热度</button>
+                        <button class="filter-btn">24小时热点</button>
+                        <button class="filter-btn">本周热门</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- 右侧面板 -->
+            <main class="dashboard">
+                <!-- 微博热搜 -->
+                <div class="platform-section weibo">
+                    <!-- 原有内容保持不变 -->
+                </div>
+
+                <!-- 抖音热榜 -->
+                <div class="platform-section douyin">
+                    <!-- 原有内容保持不变 -->
+                </div>
+
+                <!-- 小红书热门 -->
+                <div class="platform-section bilibili">
+                    <!-- 原有内容保持不变 -->
+                </div>
+
+                <!-- 知乎热榜 -->
+                <div class="platform-section zhihu">
+                    <!-- 原有内容保持不变 -->
+                </div>
+                
+                <!-- 新增微信公众号热门文章板块 -->
+                <div class="platform-section wechat">
+                    <div class="platform-header">
+                        <div class="platform-logo">微</div>
+                        <h2 class="platform-title">微信公众号热门文章 <span class="hot-tag">每日精选</span></h2>
+                    </div>
+                    <div class="trend-list" id="wechatArticles">
+                        <!-- 文章将通过JavaScript动态加载 -->
+                    </div>
+                    
+                    <div class="api-config">
+                        <div class="api-title">API配置</div>
+                        <div class="api-form">
+                            <div class="api-input">
+                                <input type="text" id="apiKey" placeholder="输入API密钥">
+                            </div>
+                            <button class="api-button" id="fetchWechat">
+                                <i class="fas fa-sync-alt"></i> 获取热门文章
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        
+        <!-- 刷新状态 -->
+        <div class="refresh-info">
+            <i class="fas fa-sync-alt"></i> 数据每5分钟自动更新 · 最后更新时间：2025年7月26日 17:05:31
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <p>热点追踪平台 · 聚合全网流行内容 · 版权所有 © 2025</p>
+            <p>温馨提示：热点内容随算法变化频繁更新，观点不代表本平台立场</p>
+        </div>
+    </footer>
+
+    <script>
+        // 原有JavaScript保持不变
+        
+        // 新增微信公众号功能
+        document.getElementById('fetchWechat').addEventListener('click', function() {
+            const apiKey = document.getElementById('apiKey').value;
+            if (!apiKey) {
+                alert('请输入API密钥');
+                return;
+            }
+            
+            fetchWechatHotArticles(apiKey);
+        });
+        
+        // 模拟获取微信公众号热门文章
+        function fetchWechatHotArticles(apiKey) {
+            // 在实际应用中，这里会调用真实的API
+            // 以下是模拟数据
+            const articles = [
+                {
+                    title: "2025年人工智能发展的十大趋势预测",
+                    author: "科技前沿观察",
+                    thumb: "https://via.placeholder.com/120x90?text=AI+趋势",
+                    readCount: 152430,
+                    likeCount: 9832,
+                    date: "2025-07-25"
+                },
+                {
+                    title: "夏季健康饮食指南：营养师推荐的10种超级食物",
+                    author: "健康生活家",
+                    thumb: "https://via.placeholder.com/120x90?text=健康饮食",
+                    readCount: 128765,
+                    likeCount: 8765,
+                    date: "2025-07-24"
+                },
+                {
+                    title: "新经济政策解读：对普通人的影响有多大？",
+                    author: "财经观察",
+                    thumb: "https://via.placeholder.com/120x90?text=经济政策",
+                    readCount: 210543,
+                    likeCount: 15678,
+                    date: "2025-07-23"
+                },
+                {
+                    title: "城市漫步指南：发现你身边的隐藏美景",
+                    author: "旅行达人",
+                    thumb: "https://via.placeholder.com/120x90?text=城市漫步",
+                    readCount: 98765,
+                    likeCount: 6543,
+                    date: "2025-07-22"
+                },
+                {
+                    title: "职场生存法则：如何应对办公室政治",
+                    author: "职场精英",
+                    thumb: "https://via.placeholder.com/120x90?text=职场法则",
+                    readCount: 143256,
+                    likeCount: 9876,
+                    date: "2025-07-21"
+                }
+            ];
+            
+            renderWechatArticles(articles);
+        }
+        
+        // 渲染微信公众号文章
+        function renderWechatArticles(articles) {
+            const container = document.getElementById('wechatArticles');
+            container.innerHTML = '';
+            
+            articles.forEach(article => {
+                const articleElement = document.createElement('div');
+                articleElement.className = 'article-card';
+                articleElement.innerHTML = `
+                    <img src="${article.thumb}" alt="${article.title}" class="article-thumb">
+                    <div class="article-content">
+                        <div class="article-title">${article.title}</div>
+                        <div class="article-meta">
+                            <div class="article-author">${article.author}</div>
+                            <div class="article-date">${article.date}</div>
+                        </div>
+                        <div class="article-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-eye"></i> ${article.readCount.toLocaleString()}阅读
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-thumbs-up"></i> ${article.likeCount.toLocaleString()}点赞
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(articleElement);
+            });
+        }
+        
+        // 初始化时加载模拟数据
+        window.addEventListener('DOMContentLoaded', function() {
+            // 模拟API调用
+            setTimeout(() => {
+                fetchWechatHotArticles('demo_key');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
