@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>暗色导航页</title>
+    <title>快速导航</title>
     <style>
         * {
             margin: 0;
@@ -44,6 +44,7 @@
             overflow: hidden;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            user-select: none;
         }
         
         .card:hover {
@@ -626,32 +627,42 @@
                 `;
                 
                 // 添加点击跳转功能
-                card.addEventListener('click', (e) => {
+                const clickHandler = (e) => {
                     if (!e.target.classList.contains('edit-btn') && 
                         !e.target.classList.contains('delete-btn')) {
                         window.open(site.url, '_blank');
                     }
-                });
+                };
+                
+                card.addEventListener('click', clickHandler);
                 
                 // 添加拖拽功能
-                setupCardDrag(card, index);
+                setupCardDrag(card, index, clickHandler);
                 
                 return card;
             }
             
-            // 设置卡片拖拽功能
-            function setupCardDrag(card, index) {
+            // 设置卡片拖拽功能（解决拖动后触发点击的问题）
+            function setupCardDrag(card, index, clickHandler) {
+                let dragStart = false;
+                let startX, startY;
+                
                 card.addEventListener('mousedown', function(e) {
                     if (e.target.classList.contains('edit-btn') || 
                         e.target.classList.contains('delete-btn')) {
                         return;
                     }
                     
+                    dragStart = true;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    
                     dragSrcEl = card;
                     offsetX = e.clientX - card.getBoundingClientRect().left;
                     offsetY = e.clientY - card.getBoundingClientRect().top;
                     
-                    card.classList.add('dragging');
+                    // 临时移除点击事件监听器
+                    card.removeEventListener('click', clickHandler);
                     
                     document.addEventListener('mousemove', onMouseMove);
                     document.addEventListener('mouseup', onMouseUp);
@@ -660,7 +671,15 @@
                 });
                 
                 function onMouseMove(e) {
-                    if (!dragSrcEl) return;
+                    if (!dragStart) return;
+                    
+                    // 检查是否达到拖动阈值（5px）
+                    const dx = Math.abs(e.clientX - startX);
+                    const dy = Math.abs(e.clientY - startY);
+                    
+                    if (dx < 5 && dy < 5) return;
+                    
+                    card.classList.add('dragging');
                     
                     const x = e.clientX - offsetX;
                     const y = e.clientY - offsetY;
@@ -677,15 +696,22 @@
                 }
                 
                 function onMouseUp() {
-                    if (!dragSrcEl) return;
+                    dragStart = false;
                     
-                    card.classList.remove('dragging');
+                    if (card.classList.contains('dragging')) {
+                        card.classList.remove('dragging');
+                        
+                        // 保存新位置
+                        const rect = card.getBoundingClientRect();
+                        sites[index].x = rect.left;
+                        sites[index].y = rect.top;
+                        saveSites();
+                    }
                     
-                    // 保存新位置
-                    const rect = card.getBoundingClientRect();
-                    sites[index].x = rect.left;
-                    sites[index].y = rect.top;
-                    saveSites();
+                    // 重新添加点击事件监听器
+                    setTimeout(() => {
+                        card.addEventListener('click', clickHandler);
+                    }, 100);
                     
                     document.removeEventListener('mousemove', onMouseMove);
                     document.removeEventListener('mouseup', onMouseUp);
