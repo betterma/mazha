@@ -37,7 +37,7 @@ const storage = (function() {
     return {
       // 保存记忆条目
       saveEntry: async function(date, content) {
-        const filePath = `diary-entries/${date}.md`;
+        const filePath = `memory/diary-entries/${date}.md`;
         const message = `${date} ${content ? '记忆已更新' : '记忆已删除'}`;
         
         try {
@@ -66,7 +66,7 @@ const storage = (function() {
       
       // 获取记忆条目
       getEntry: async function(date) {
-        const filePath = `diary-entries/${date}.md`;
+        const filePath = `memory/diary-entries/${date}.md`;
         
         try {
           const file = await request(`contents/${filePath}`);
@@ -80,7 +80,7 @@ const storage = (function() {
       // 获取所有记忆日期
       getEntries: async function() {
         try {
-          const data = await request('contents/diary-entries');
+          const data = await request('contents/memory/diary-entries');
           return data
             .filter(item => item.type === 'file' && item.name.endsWith('.md'))
             .map(item => ({
@@ -95,7 +95,7 @@ const storage = (function() {
       },
 
       deleteEntry: async function(date) {
-        const filePath = `diary-entries/${date}.md`;
+        const filePath = `memory/diary-entries/${date}.md`;
         // 先获取 sha
         const { sha } = await request(`contents/${filePath}`);
         return request(`contents/${filePath}`, {
